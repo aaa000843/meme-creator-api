@@ -1,11 +1,13 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationSchema } from './configuration';
-import { NestLoggerModule, ReqLogMiddleware } from 'nest-common';
+import { UserModule } from './features/user/user.module';
+import { AuthModule } from './features/auth/auth.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { GlobalJwtModule } from './features/shared/global-jwt.module';
 
 @Module({
 	imports: [
-		NestLoggerModule,
 		ConfigModule.forRoot({
 			isGlobal: true,
 			validationSchema: ConfigurationSchema,
@@ -13,12 +15,21 @@ import { NestLoggerModule, ReqLogMiddleware } from 'nest-common';
 				abortEarly: true,
 			},
 		}),
+		GlobalJwtModule,
+		MongooseModule.forRootAsync({
+			imports: [ConfigModule],
+			inject: [ConfigService],
+			useFactory: (config: ConfigService) => {
+				return {
+					uri: config.get<string>('MONGODB_URI'),
+					autoCreate: true,
+				};
+			},
+		}),
+		UserModule,
+		AuthModule,
 	],
 	controllers: [],
 	providers: [],
 })
-export class AppModule {
-	configure(consumer: MiddlewareConsumer): void {
-		consumer.apply(ReqLogMiddleware).forRoutes('*');
-	}
-}
+export class AppModule {}
