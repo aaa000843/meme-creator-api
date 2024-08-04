@@ -5,6 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -26,8 +27,8 @@ export class AuthController {
 	@Post('forgot-password')
 	@ApiOperation({ summary: 'send email to send reset password token' })
 	@HttpCode(HttpStatus.NO_CONTENT)
-	async forgotPassword(@Body('email') email: string) {
-		await this.authService.forgotPassword(email);
+	async forgotPassword(@Body() payload: ForgotPasswordDto) {
+		return this.authService.forgotPassword(payload.email);
 	}
 
 	@Post('reset-password')

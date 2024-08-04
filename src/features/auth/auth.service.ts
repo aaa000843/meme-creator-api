@@ -37,7 +37,6 @@ export class AuthService {
 			throw new BusinessError('VALIDATION_ERROR', 'Incorrect password');
 		}
 		const payload = { email: user.email, sub: user._id };
-		console.log({ jwtService: this.jwtService });
 		const accessToken = this.jwtService.sign(payload);
 		return { accessToken };
 	}
@@ -48,6 +47,7 @@ export class AuthService {
 			throw new BusinessError('NOT_FOUND', 'User not found');
 		}
 		const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1d' });
+		console.log({ token });
 		await this.mailService.sendPasswordResetEmail(user.email, token);
 	}
 
