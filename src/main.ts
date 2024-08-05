@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import { setupSwagger } from './swagger';
-import { ErrorsInterceptor } from './core/interceptors/error.interceptor';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -24,7 +24,7 @@ async function bootstrap() {
 		}),
 	);
 
-	app.useGlobalInterceptors(new ErrorsInterceptor());
+	app.useGlobalInterceptors(new ErrorInterceptor());
 	app.enableCors();
 
 	setupSwagger(app);

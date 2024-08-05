@@ -4,6 +4,11 @@
 		"httpStatusCode": 400,
 		"logLevel": "warn"
 	},
+	"HTTP_EXCEPTION": {
+		"message": "Internal Server Error",
+		"httpStatusCode": 500,
+		"logLevel": "warn"
+	},
 	"JOI_VALIDATION_ERROR": {
 		"message": "Joi validation error",
 		"httpStatusCode": 400,

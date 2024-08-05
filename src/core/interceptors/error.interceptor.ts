@@ -1,66 +1,56 @@
-import { AppLogger } from '@/common/app.logger';
-import {
-	CallHandler,
-	ExecutionContext,
-	HttpException,
-	Injectable,
-	InternalServerErrorException,
-	NestInterceptor,
-} from '@nestjs/common';
-
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor, HttpException } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import { BusinessError } from 'src/common/business-error';
+import { Logger } from '@nestjs/common'; // or your custom logger
+import { BusinessError, LogLevel } from '@/common/business-error';
 
 @Injectable()
-export class ErrorsInterceptor implements NestInterceptor {
-	private readonly logger = new AppLogger(ErrorsInterceptor.name);
+export class ErrorInterceptor implements NestInterceptor {
+	private readonly logger = new Logger(ErrorInterceptor.name);
+
 	intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
 		return next.handle().pipe(
 			catchError((error) =>
 				throwError(() => {
+					let businessError: BusinessError;
+
 					if (error instanceof BusinessError) {
-						const errorResponse = {
-							statusCode: error.httpStatusCode,
-							timestamp: new Date().toISOString(),
-							errorCode: error.errorCode,
-							message: error.message,
-							context: error.context,
-						};
-
-						if (error.logLevel !== 'off') {
-							this.logger[error.logLevel]({
-								stack: error.stack,
-								...errorResponse,
-							});
-						}
-						return new HttpException(errorResponse, error.httpStatusCode);
-					}
-					if (error instanceof HttpException) {
-						const errorResponse = {
-							statusCode: error.getStatus(),
-							timestamp: new Date().toISOString(),
-							message: error.message,
-							error: error.getResponse(),
-						};
-						if (error.getStatus() >= 400 && error.getStatus() < 500) {
-							this.logger.warn({
-								stack: error.stack,
-								...errorResponse,
-							});
-						} else {
-							this.logger.error({
-								stack: error.stack,
-								...errorResponse,
-							});
-						}
-						return new HttpException(errorResponse, error.getStatus());
+						businessError = error;
+					} else if (error instanceof HttpException) {
+						const errorResponse = error.getResponse() as Record<string, unknown>;
+						businessError = new BusinessError(
+							'HTTP_EXCEPTION',
+							errorResponse.message as string,
+							errorResponse,
+							error.getStatus(),
+							LogLevel.error,
+						);
+					} else {
+						businessError = new BusinessError(
+							'INTERNAL_SERVER_ERROR',
+							error.message || 'Internal Server Error',
+							error,
+							500,
+							LogLevel.error,
+						);
 					}
 
-					this.logger.error(error);
+					const errorResponse = {
+						statusCode: businessError.httpStatusCode,
+						timestamp: new Date().toISOString(),
+						errorCode: businessError.errorCode,
+						message: businessError.message,
+						context: businessError.context,
+					};
 
-					return new InternalServerErrorException(error);
+					if (businessError.logLevel !== LogLevel.off) {
+						this.logger[businessError.logLevel]({
+							stack: businessError.stack,
+							...errorResponse,
+						});
+					}
+
+					return new HttpException(errorResponse, businessError.httpStatusCode);
 				}),
 			),
 		);
