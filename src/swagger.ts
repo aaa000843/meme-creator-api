@@ -8,8 +8,8 @@ export const setupSwagger = (app: INestApplication) => {
 	if (process.env.SWAGGER !== 'true') return;
 
 	const config = new DocumentBuilder()
-		.setTitle('KASI')
-		.setDescription('Kasi Api docs')
+		.setTitle('Meme Creator')
+		.setDescription('Meme Creator Api docs')
 		.setVersion('1.0')
 		.addServer(`${process.env.API_URL}`)
 		.addBearerAuth()

@@ -5,6 +5,7 @@ import { UserModule } from './features/user/user.module';
 import { AuthModule } from './features/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GlobalJwtModule } from './features/shared/global-jwt.module';
+import { DesignModule } from './features/design/design.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { GlobalJwtModule } from './features/shared/global-jwt.module';
 		}),
 		UserModule,
 		AuthModule,
+		DesignModule,
 	],
 	controllers: [],
 	providers: [],
