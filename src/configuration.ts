@@ -10,4 +10,10 @@ export const ConfigurationSchema = Joi.object({
 	API_URL: Joi.string().required(),
 	SENDGRID_API_KEY: Joi.string().required(),
 	JWT_SECRET: Joi.string().required(),
+
+	// Imagekit
+	IMAGEKIT_PUBLIC_KEY: Joi.string().required(),
+	IMAGEKIT_PRIVATE_KEY: Joi.string().required(),
+	IMAGEKIT_ENDPOINT: Joi.string().required(),
+	IMAGE_KIT_FOLDER: Joi.string().required(),
 });

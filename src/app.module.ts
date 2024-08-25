@@ -6,6 +6,8 @@ import { AuthModule } from './features/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GlobalJwtModule } from './features/shared/global-jwt.module';
 import { DesignModule } from './features/design/design.module';
+import { PictureModule } from './features/picture/picture.module';
+import { DesignAssetModule } from './features/design-assets/design-asset.module';
 
 @Module({
 	imports: [
@@ -30,6 +32,8 @@ import { DesignModule } from './features/design/design.module';
 		UserModule,
 		AuthModule,
 		DesignModule,
+		PictureModule,
+		DesignAssetModule,
 	],
 	controllers: [],
 	providers: [],

@@ -6,9 +6,5 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "explicit"
 	},
-	"cSpell.words": [
-		"Langchain",
-		"nestjs",
-		"pino"
-	]
+	"cSpell.words": ["Langchain", "nestjs", "openapi", "pino"]
 }
