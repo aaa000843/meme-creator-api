@@ -1,9 +1,8 @@
+import { BusinessError } from '@/common/business-error';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import sendgrid from '@sendgrid/mail';
-import { BusinessError } from 'nest-common';
-
 @Injectable()
 export class EmailService {
 	constructor(private readonly config: ConfigService) {

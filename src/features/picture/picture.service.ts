@@ -7,9 +7,9 @@ import { UploadOptions } from 'imagekit/dist/libs/interfaces';
 import { UrlOptionsPath } from 'imagekit/dist/libs/interfaces/UrlOptions';
 import path from 'path';
 import { Picture, PictureDocument } from './picture.schema';
-import { AppLogger } from 'nest-common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AppLogger } from '@/common/app.logger';
 
 @Injectable()
 export class PictureService {
